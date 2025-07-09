@@ -108,7 +108,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
     {
-        if (playerInputManager != null) return;
+        if (this.playerInputManager != null) return;
         this.playerInputManager = playerInputManager;
     }
 }

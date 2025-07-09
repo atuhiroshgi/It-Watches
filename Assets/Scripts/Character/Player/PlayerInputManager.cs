@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerInputManager : MonoBehaviour
 {
@@ -9,6 +10,7 @@ public class PlayerInputManager : MonoBehaviour
     private bool jumpInput;
     private bool jumpInputDown;
     private bool jumpInputUp;
+    private bool attackInput;
 
     public float VerticalInput => verticalInput;
     public float HorizontalInput => horizontalInput;
@@ -17,6 +19,7 @@ public class PlayerInputManager : MonoBehaviour
     public bool JumpInput => jumpInput;
     public bool JumpInputDown => jumpInputDown;
     public bool JumpInputUp => jumpInputUp;
+    public bool AttackInput => attackInput;
 
     public void GameLoopUpdate()
     {
@@ -28,6 +31,7 @@ public class PlayerInputManager : MonoBehaviour
         HandlePlayerMovementInput();
         HandleCameraMovementInput();
         HandleJumpInput();
+        HandleAttackInput();
     }
 
     private void HandlePlayerMovementInput()
@@ -47,5 +51,10 @@ public class PlayerInputManager : MonoBehaviour
         jumpInput = Input.GetKey(KeyCode.Space);
         jumpInputDown = Input.GetKeyDown(KeyCode.Space);
         jumpInputUp = Input.GetKeyUp(KeyCode.Space);
+    }
+
+    private void HandleAttackInput()
+    {
+        attackInput = Input.GetMouseButton(0);
     }
 }

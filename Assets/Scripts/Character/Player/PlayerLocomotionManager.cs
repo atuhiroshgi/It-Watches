@@ -144,13 +144,13 @@ public class PlayerLocomotionManager : MonoBehaviour
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
     {
-        if (playerInputManager != null) return;
+        if (this.playerInputManager != null) return;
         this.playerInputManager = playerInputManager;
     }
 
     public void SetPlayerCamera(PlayerCamera playerCamera)
     {
-        if (playerCamera != null) return;
+        if (this.playerCamera != null) return;
         this.playerCamera = playerCamera;
     }
 }

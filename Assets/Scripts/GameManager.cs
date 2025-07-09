@@ -7,8 +7,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerCamera playerCamera;
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
-    [SerializeField] private EnemyAIManager enemyAIManager;
-
+    [SerializeField] private PlayerAttackManager playerAttackManager;
+    [SerializeField] private EnemyManager[] enemyManagers;
+    
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -44,18 +45,26 @@ public class GameManager : MonoBehaviour
         playerCamera.SetPlayerInputManager(playerInputManager);
         playerLocomotionManager.SetPlayerInputManager(playerInputManager);
         playerLocomotionManager.SetPlayerCamera(playerCamera);
+        playerAttackManager.SetPlayerInputManager(playerInputManager);
+        playerAttackManager.SetPlayerCamera(playerCamera);
     }
 
     private void CallCustomAwake()
     {
         playerLocomotionManager.Setup();
+        playerAttackManager.Setup();
+
+        foreach (EnemyManager enemy in enemyManagers)
+        {
+            enemy.SetPlayerTransform(playerLocomotionManager.transform);
+            enemy.Setup();
+        }
     }
 
     private void StartGamePlaySystems()
     {
         playerLocomotionManager.Initialize();
         playerCamera.Initialize();
-        enemyAIManager.Initialize();
     }
 
     private void FixedUpdateGameLoop()
@@ -67,7 +76,12 @@ public class GameManager : MonoBehaviour
     {
         playerInputManager.GameLoopUpdate();
         playerLocomotionManager.GameLoopUpdate();
-        enemyAIManager.GameLoopUpdate();
+        playerAttackManager.GameLoopUpdate();
+
+        foreach (EnemyManager enemy in enemyManagers)
+        {
+            enemy.GameLoopUpdate();
+        }
     }
 
     private void LateUpdateGameLoop()
