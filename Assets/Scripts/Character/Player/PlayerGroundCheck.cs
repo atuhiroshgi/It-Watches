@@ -10,6 +10,8 @@ public class PlayerGroundCheck : MonoBehaviour
     private float width = 0.5f;
     private float depth = 0.5f;
 
+    public bool GetIsGrounded() => CheckGroundStatus();
+
     private void Awake()
     {
         AutoDetectColliderSize();
@@ -70,5 +72,4 @@ public class PlayerGroundCheck : MonoBehaviour
         return false;
     }
 
-    public bool GetIsGrounded() => CheckGroundStatus();
 }

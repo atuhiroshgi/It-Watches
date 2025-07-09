@@ -10,6 +10,14 @@ public class PlayerInputManager : MonoBehaviour
     private bool jumpInputDown;
     private bool jumpInputUp;
 
+    public float VerticalInput => verticalInput;
+    public float HorizontalInput => horizontalInput;
+    public float CameraVerticalInput => cameraVerticalInput;
+    public float CameraHorizontalInput => cameraHorizontalInput;
+    public bool JumpInput => jumpInput;
+    public bool JumpInputDown => jumpInputDown;
+    public bool JumpInputUp => jumpInputUp;
+
     public void GameLoopUpdate()
     {
         HandleAllInputs();
@@ -40,13 +48,4 @@ public class PlayerInputManager : MonoBehaviour
         jumpInputDown = Input.GetKeyDown(KeyCode.Space);
         jumpInputUp = Input.GetKeyUp(KeyCode.Space);
     }
-
-    public float GetVerticalInput() => verticalInput;
-    public float GetHorizontalInput() => horizontalInput;
-    public float GetCameraVerticalInput() => cameraVerticalInput;
-    public float GetCameraHorizontalInput() => cameraHorizontalInput;
-    public bool GetJumpInput() => jumpInput;
-    public bool GetJumpInputDown() => jumpInputDown;
-    public bool GetJumpInputUp() => jumpInputUp;
-
 }

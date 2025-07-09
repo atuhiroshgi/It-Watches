@@ -26,6 +26,8 @@ public class PlayerCamera : MonoBehaviour
     private Vector3 cameraVelocity;
     private float currentCameraDistance;
 
+    public Camera CameraObject => cameraObject;
+
     public void Initialize()
     {
         currentCameraDistance = Mathf.Clamp(defaultCameraDistance, minCameraDistance, maxCameraDistance);
@@ -62,8 +64,8 @@ public class PlayerCamera : MonoBehaviour
 
     private void HandleRotations()
     {
-        float horizontal = playerInputManager.GetCameraHorizontalInput();
-        float vertical = playerInputManager.GetCameraVerticalInput();
+        float horizontal = playerInputManager.CameraHorizontalInput;
+        float vertical = playerInputManager.CameraVerticalInput;
 
         // ‰ñ“]Šp“x‚ÌXV
         leftAndRightLookAngle += horizontal * leftAndRightRotationSpeed;
@@ -106,8 +108,7 @@ public class PlayerCamera : MonoBehaviour
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
     {
+        if (playerInputManager != null) return;
         this.playerInputManager = playerInputManager;
     }
-
-    public Camera GetCamera() => cameraObject;
 }

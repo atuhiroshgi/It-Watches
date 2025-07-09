@@ -61,12 +61,12 @@ public class PlayerLocomotionManager : MonoBehaviour
     {
         if (playerInputManager == null || playerCamera == null) return;
 
-        float inputH = playerInputManager.GetHorizontalInput();
-        float inputV = playerInputManager.GetVerticalInput();
+        float inputH = playerInputManager.HorizontalInput;
+        float inputV = playerInputManager.VerticalInput;
 
         isMoving = (new Vector2(inputH, inputV).sqrMagnitude > 0.001f);
 
-        Transform camTransform = playerCamera.GetCamera().transform;
+        Transform camTransform = playerCamera.CameraObject.transform;
         Vector3 camForward = camTransform.forward;
         Vector3 camRight = camTransform.right;
         camForward.y = 0f;
@@ -96,7 +96,7 @@ public class PlayerLocomotionManager : MonoBehaviour
     private void HandleJump()
     {
         // ジャンプボタン押し始め
-        if (playerInputManager.GetJumpInputDown() && playerGroundCheck.GetIsGrounded() && !isJumping)
+        if (playerInputManager.JumpInputDown && playerGroundCheck.GetIsGrounded() && !isJumping)
         {
             jumpPressTime = 0f;
             isJumping = true;
@@ -111,7 +111,7 @@ public class PlayerLocomotionManager : MonoBehaviour
         }
 
         // ジャンプボタンを押している間
-        if (isJumping && playerInputManager.GetJumpInput())
+        if (isJumping && playerInputManager.JumpInput)
         {
             jumpPressTime += Time.deltaTime;
 
@@ -129,7 +129,7 @@ public class PlayerLocomotionManager : MonoBehaviour
         }
 
         // ジャンプ終了条件
-        if (isJumping && (playerInputManager.GetJumpInputUp() || jumpPressTime >= maxJumpPressTime))
+        if (isJumping && (playerInputManager.JumpInputUp || jumpPressTime >= maxJumpPressTime))
         {
             isJumping = false;
         }
@@ -144,11 +144,13 @@ public class PlayerLocomotionManager : MonoBehaviour
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
     {
+        if (playerInputManager != null) return;
         this.playerInputManager = playerInputManager;
     }
 
     public void SetPlayerCamera(PlayerCamera playerCamera)
     {
+        if (playerCamera != null) return;
         this.playerCamera = playerCamera;
     }
 }
