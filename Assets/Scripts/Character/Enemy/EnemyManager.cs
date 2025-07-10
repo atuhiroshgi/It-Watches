@@ -5,12 +5,16 @@ public class EnemyManager : MonoBehaviour
 {
     [Header("パラメータ設定")]
     [SerializeField] private float downDuration = 10f;
+    [SerializeField] private float damageCooldown = 0.5f;
 
     private EnemyAIManager enemyAIManager;
     private Animator animator;
     private Transform playerTransform;
     private int damageCount = 0;
+    private float lastDamageTime = -Mathf.Infinity;
     private bool isDown = false;
+
+    public bool IsDown => isDown;
 
     public void Setup()
     {
@@ -19,6 +23,7 @@ public class EnemyManager : MonoBehaviour
 
         enemyAIManager.SetEnemyAnimator(animator);
         enemyAIManager.SetPlayerTransform(playerTransform);
+        enemyAIManager.SetIsDownFunc(() => IsDown);
     }
 
     public void GameLoopUpdate()
@@ -31,10 +36,17 @@ public class EnemyManager : MonoBehaviour
         return enemyAIManager != null && enemyAIManager.CanSeePlayer();
     }
 
-    public async void TakeDamage()
+    public void TakeDamage()
     {
         if (isDown) return;
 
+        if (Time.time < lastDamageTime + damageCooldown)
+        {
+            // まだダメージクールタイム中なので無視
+            return;
+        }
+
+        lastDamageTime = Time.time;
         damageCount++;
 
         if (damageCount == 1)
@@ -46,12 +58,16 @@ public class EnemyManager : MonoBehaviour
             isDown = true;
             animator.SetBool("isDown", true);
 
-            await UniTask.Delay(System.TimeSpan.FromSeconds(downDuration));
-
-            animator.SetBool("isDown", false);
-            isDown = false;
-            damageCount = 0;
+            _ = DownRecoveryAsync();
         }
+    }
+
+    private async UniTaskVoid DownRecoveryAsync()
+    {
+        await UniTask.Delay(System.TimeSpan.FromSeconds(downDuration));
+        animator.SetBool("isDown", false);
+        isDown = false;
+        damageCount = 0;
     }
 
     public void SetPlayerTransform(Transform playerTransform)

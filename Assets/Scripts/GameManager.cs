@@ -4,12 +4,14 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     [Header("各クラスの参照")]
+    [SerializeField] private PlayerManager playerManager;
     [SerializeField] private PlayerCamera playerCamera;
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
+    [SerializeField] private CrosshairManager crosshairManager;
     [SerializeField] private EnemyManager[] enemyManagers;
-    
+
     private void Awake()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -42,15 +44,18 @@ public class GameManager : MonoBehaviour
 
     private void InjectDependencies()
     {
+        playerManager.SetEnemyManagers(enemyManagers);
         playerCamera.SetPlayerInputManager(playerInputManager);
         playerLocomotionManager.SetPlayerInputManager(playerInputManager);
         playerLocomotionManager.SetPlayerCamera(playerCamera);
         playerAttackManager.SetPlayerInputManager(playerInputManager);
         playerAttackManager.SetPlayerCamera(playerCamera);
+        playerAttackManager.SetCrosshairManager(crosshairManager);
     }
 
     private void CallCustomAwake()
     {
+        playerManager.Setup();
         playerLocomotionManager.Setup();
         playerAttackManager.Setup();
 
@@ -63,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     private void StartGamePlaySystems()
     {
+        playerManager.Initialize();
         playerLocomotionManager.Initialize();
         playerCamera.Initialize();
     }
@@ -74,6 +80,7 @@ public class GameManager : MonoBehaviour
 
     private void UpdateGameLoop()
     {
+        playerManager.GameLoopUpdate();
         playerInputManager.GameLoopUpdate();
         playerLocomotionManager.GameLoopUpdate();
         playerAttackManager.GameLoopUpdate();

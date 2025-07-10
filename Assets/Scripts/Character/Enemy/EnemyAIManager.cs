@@ -19,13 +19,20 @@ public class EnemyAIManager : MonoBehaviour
     private Transform playerTransform;
     private int currentPatrolIndex = 0;
     private float waitTimer = 0f;
-    private bool isWaiting = false;
-
-    private bool isLookingAtPlayer = false;
     private float lookAtTimer = 0f;
+    private bool isWaiting = false;
+    private bool isLookingAtPlayer = false;
+
+    private System.Func<bool> isDownFunc;
 
     public void GameLoopUpdate()
     {
+        if(isDownFunc != null && isDownFunc())
+        {
+            animator?.SetBool("isWalking", false);
+            return;
+        }
+
         if (CanSeePlayer())
         {
             // プレイヤー視認中は注視状態へ
@@ -112,6 +119,7 @@ public class EnemyAIManager : MonoBehaviour
 
     public bool CanSeePlayer()
     {
+        if (isDownFunc != null && isDownFunc()) return false;
         if (playerTransform == null) return false;
 
         Vector3 dirToPlayer = (playerTransform.position - transform.position).normalized;
@@ -139,5 +147,10 @@ public class EnemyAIManager : MonoBehaviour
     public void SetEnemyAnimator(Animator animator)
     {
         this.animator = animator;
+    }
+
+    public void SetIsDownFunc(System.Func<bool> func)
+    {
+        isDownFunc = func;
     }
 }

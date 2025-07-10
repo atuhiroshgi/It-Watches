@@ -2,17 +2,29 @@ using UnityEngine;
 
 public class PlayerAttackManager : MonoBehaviour
 {
+    [Header("攻撃の設定")]
     [SerializeField] private LayerMask attackHitMask;
     [SerializeField] private float attackCoolTime = 0.7f;
     [SerializeField] private float attackDuration = 0.4f;
     [SerializeField] private float attackRange = 3f;
 
+    [Header("照準の調整(画面の高さに対する割合)")]
+    [SerializeField, Range(0f, 0.5f)] private float crosshairOffsetRatio = 0.1f;
+
+    [Header("クロスヘア ヒステリシス(OFF判定までの連続フレーム数)")]
+    [SerializeField, Range(1, 10)] private int hysteresisFrames = 5;
+
     private PlayerInputManager playerInputManager;
     private PlayerCamera playerCamera;
+    private CrosshairManager crosshairManager;
     private EnemyManager currentTargetEnemy;
     private Animator animator;
     private float lastAttackTime = -Mathf.Infinity;
     private bool isAttack = false;
+
+    // ヒステリシス用カウンターと安定状態
+    private int offCounter = 0;
+    private bool stableCanHit = false;
 
     public bool IsAttack => isAttack;
 
@@ -36,39 +48,55 @@ public class PlayerAttackManager : MonoBehaviour
             currentTargetEnemy = null;
         }
 
-        if (isAttack)
+        UpdateCrosshairAndTarget();
+
+        if (isAttack && currentTargetEnemy != null)
         {
-            CheckAttackHit();
-        }
-        else
-        {
-            currentTargetEnemy = null;
+            currentTargetEnemy.TakeDamage();
         }
     }
 
-    private void CheckAttackHit()
+    private void UpdateCrosshairAndTarget()
     {
-        Ray ray = playerCamera.CameraObject.ScreenPointToRay(new Vector3(Screen.width / 2f, Screen.height / 2f));
+        float verticalOffset = Screen.height * crosshairOffsetRatio;
+        Vector3 screenPoint = new Vector3(Screen.width / 2f, Screen.height / 2f + verticalOffset);
+        Ray ray = playerCamera.CameraObject.ScreenPointToRay(screenPoint);
+
+        bool currentCanHit = false;
+        EnemyManager newTarget = null;
+
         if (Physics.Raycast(ray, out RaycastHit hit, attackRange, attackHitMask))
         {
             EnemyManager enemy = hit.collider.GetComponent<EnemyManager>() ?? hit.collider.GetComponentInParent<EnemyManager>();
             if (enemy != null && enemy.CanSeePlayer())
             {
-                if (enemy != currentTargetEnemy)
-                {
-                    currentTargetEnemy = enemy;
-                    enemy.TakeDamage();
-                }
+                newTarget = enemy;
+                currentCanHit = true;
             }
-            else
-            {
-                currentTargetEnemy = null;
-            }
+        }
+
+        // ヒステリシス処理
+        if (currentCanHit)
+        {
+            offCounter = 0;
+            stableCanHit = true;
         }
         else
         {
-            currentTargetEnemy = null;
+            offCounter++;
+            if (offCounter >= hysteresisFrames)
+            {
+                stableCanHit = false;
+                currentTargetEnemy = null;
+            }
         }
+
+        if (stableCanHit)
+        {
+            currentTargetEnemy = newTarget;
+        }
+
+        crosshairManager?.SetActiveState(stableCanHit);
     }
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
@@ -79,5 +107,10 @@ public class PlayerAttackManager : MonoBehaviour
     public void SetPlayerCamera(PlayerCamera playerCamera)
     {
         this.playerCamera = playerCamera;
+    }
+
+    public void SetCrosshairManager(CrosshairManager crosshairManager)
+    {
+        this.crosshairManager = crosshairManager;
     }
 }
