@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-public class HPGauge : MonoBehaviour
+public class HPGauge : EntityBase
 {
     [Header("éQè∆ê›íË")]
     [SerializeField] private Image hpGaugeImageUI;
@@ -16,9 +16,19 @@ public class HPGauge : MonoBehaviour
 
     private PlayerManager playerManager;
 
+    public void Initialize()
+    {
+        hpGaugeImageUI.color = highColor;
+    }
+
+    public override void GameStart()
+    {
+        base.GameStart();
+    }
+
     public void GameLoopUpdate()
     {
-        if (playerManager == null || hpGaugeImageUI == null) return;
+        if (playerManager == null || hpGaugeImageUI == null || !gameStart) return;
 
         float healthRatio = playerManager.CurrentHealth / playerManager.MaxHealth;
         hpGaugeImageUI.fillAmount = healthRatio;

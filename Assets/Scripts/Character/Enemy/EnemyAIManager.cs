@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class EnemyAIManager : MonoBehaviour
+public class EnemyAIManager : EntityBase
 {
     [Header("ã§í ê›íË")]
     [SerializeField] private LayerMask obstructionMask;
@@ -28,6 +28,11 @@ public class EnemyAIManager : MonoBehaviour
     private bool isLookingAtPlayer = false;
 
     private System.Func<bool> isDownFunc;
+
+    public override void GameStart()
+    {
+        base.GameStart();
+    }
 
     public void GameLoopUpdate()
     {

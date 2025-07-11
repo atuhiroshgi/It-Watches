@@ -1,14 +1,16 @@
 using UnityEngine;
 using Cysharp.Threading.Tasks;
 
-public class EnemyManager : MonoBehaviour
+public class EnemyManager : EntityBase
 {
     [Header("パラメータ設定")]
     [SerializeField] private float downDuration = 10f;
     [SerializeField] private float damageCooldown = 0.5f;
 
-    private EnemyAIManager enemyAIManager;
-    private Animator animator;
+    [Header("参照設定")]
+    [SerializeField] private EnemyAIManager enemyAIManager;
+    [SerializeField] private Animator animator;
+
     private Transform playerTransform;
     private int damageCount = 0;
     private float lastDamageTime = -Mathf.Infinity;
@@ -18,12 +20,14 @@ public class EnemyManager : MonoBehaviour
 
     public void Setup()
     {
-        animator = GetComponentInChildren<Animator>();
-        enemyAIManager = GetComponent<EnemyAIManager>();
-
         enemyAIManager.SetEnemyAnimator(animator);
         enemyAIManager.SetPlayerTransform(playerTransform);
         enemyAIManager.SetIsDownFunc(() => IsDown);
+    }
+
+    public override void GameStart()
+    {
+        base.GameStart();
     }
 
     public void GameLoopUpdate()

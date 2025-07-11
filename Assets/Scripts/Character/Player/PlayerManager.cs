@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : EntityBase
 {
+    [Header("参照設定")]
+    [SerializeField] private Animator animator;
+
     [Header("アニメーションの設定")]
     [SerializeField] private float surpriseCooldown = 5f;
 
@@ -10,25 +13,26 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private float maxHealth = 100f;
 
     private EnemyManager[] enemies;
-    private Animator animator;
     private float currentHealth;
     private float surpriseTimer = 0f;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
 
-    public void Setup()
-    {
-        animator = GetComponentInChildren<Animator>();
-    }
-
     public void Initialize()
     {
         currentHealth = maxHealth;
     }
 
+    public override void GameStart()
+    {
+        base.GameStart();
+    }
+
     public void GameLoopUpdate()
     {
+        if(!gameStart) return;
+
         bool beingSeen = false;
 
         foreach (var enemy in enemies)
@@ -63,8 +67,6 @@ public class PlayerManager : MonoBehaviour
     {
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
-
-        Debug.Log($"おばけの体力: {currentHealth}");
 
         if (currentHealth <= 0f)
         {

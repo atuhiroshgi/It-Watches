@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class PlayerLocomotionManager : MonoBehaviour
+public class PlayerLocomotionManager : EntityBase
 {
     [Header("初期設定")]
-    [SerializeField] private Transform spawnPoint;
+    [SerializeField] private PlayerGroundCheck playerGroundCheck;
+    [SerializeField] private PlayerWallCheck playerWallCheck;
+    [SerializeField] private Rigidbody rb;
+    [SerializeField] private Animator animator;
 
     [Header("移動の設定")]
     [SerializeField] private float moveSpeed = 5.0f;
@@ -18,40 +21,26 @@ public class PlayerLocomotionManager : MonoBehaviour
 
     private PlayerInputManager playerInputManager;
     private PlayerCamera playerCamera;
-    private PlayerGroundCheck playerGroundCheck;
-    private PlayerWallCheck playerWallCheck;
 
-    private Rigidbody rb;
-    private Animator animator;
     private float jumpPressTime = 0f;
     private bool isMoving = false;
     private bool isJumping = false;
 
     public void Setup()
     {
-        rb = GetComponent<Rigidbody>();
-        animator = GetComponentInChildren<Animator>();
-        playerGroundCheck = GetComponentInChildren<PlayerGroundCheck>();
-        playerWallCheck = GetComponentInChildren<PlayerWallCheck>();
+        playerWallCheck.Setup();
+        playerGroundCheck.Setup();
     }
 
-    public void Initialize()
+    public override void GameStart()
     {
-        if (spawnPoint != null)
-        {
-            if (rb != null)
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
-
-            transform.position = spawnPoint.position;
-            transform.rotation = spawnPoint.rotation;
-        }
+        base.GameStart();
     }
 
     public void GameLoopUpdate()
     {
+        if(!gameStart) return;
+        
         HandleMovement();
         HandleJump();
         HandleAnimation();

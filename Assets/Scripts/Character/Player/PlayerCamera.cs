@@ -1,19 +1,19 @@
 using UnityEngine;
 
-public class PlayerCamera : MonoBehaviour
+public class PlayerCamera : EntityBase
 {
     [SerializeField] private Camera cameraObject;
     [SerializeField] private Transform cameraPivotTransform;
     [SerializeField] private Transform playerTransform;
 
     [Header("ÉJÉÅÉâê›íË")]
+    [SerializeField] private LayerMask collideWithLayers;
     [SerializeField] private float cameraSmoothSpeed = 0.2f;
     [SerializeField] private float leftAndRightRotationSpeed = 3.0f;
     [SerializeField] private float upAndDownRotationSpeed = 3.0f;
     [SerializeField] private float minimumPivot = -30f;
     [SerializeField] private float maximumPivot = 60f;
     [SerializeField] private float cameraCollisionRadius = 0.2f;
-    [SerializeField] private LayerMask collideWithLayers;
     [SerializeField] private float defaultCameraDistance = 4.0f;
     [SerializeField] private float minCameraDistance = 1.0f;
     [SerializeField] private float maxCameraDistance = 6.0f;
@@ -34,6 +34,11 @@ public class PlayerCamera : MonoBehaviour
         // èâä˙äpìxÇê›íË
         leftAndRightLookAngle = transform.eulerAngles.y;
         upAndDownLookAngle = transform.eulerAngles.x;
+    }
+
+    public override void GameStart()
+    {
+        base.GameStart();
     }
 
     public void GameLoopLateUpdate()

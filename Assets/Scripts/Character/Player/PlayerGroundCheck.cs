@@ -1,9 +1,10 @@
 using UnityEngine;
 
-public class PlayerGroundCheck : MonoBehaviour
+public class PlayerGroundCheck : EntityBase
 {
     [Header("Ú’n”»’èÝ’è")]
     [SerializeField] private LayerMask groundLayers = ~0;
+    [SerializeField] private CapsuleCollider col;
     [SerializeField] private float checkDistance = 0.35f;
     [SerializeField] private float rayHeightOffset = 0.1f;
 
@@ -12,30 +13,15 @@ public class PlayerGroundCheck : MonoBehaviour
 
     public bool GetIsGrounded() => CheckGroundStatus();
 
-    private void Awake()
+    public void Setup()
     {
         AutoDetectColliderSize();
     }
 
     private void AutoDetectColliderSize()
     {
-        var col = GetComponentInChildren<Collider>();
-
-        if (col is CapsuleCollider capsule)
-        {
-            width = capsule.radius * 2f;
-            depth = capsule.radius * 2f;
-        }
-        else if (col is BoxCollider box)
-        {
-            width = box.size.x * transform.localScale.x;
-            depth = box.size.z * transform.localScale.z;
-        }
-        else if (col is SphereCollider sphere)
-        {
-            width = sphere.radius * 2f;
-            depth = sphere.radius * 2f;
-        }
+        width = col.radius * 2f;
+        depth = col.radius * 2f;
     }
 
     private bool CheckGroundStatus()

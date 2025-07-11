@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class PlayerInputManager : MonoBehaviour
+public class PlayerInputManager : EntityBase
 {
     private float verticalInput;
     private float horizontalInput;
@@ -21,8 +21,15 @@ public class PlayerInputManager : MonoBehaviour
     public bool JumpInputUp => jumpInputUp;
     public bool AttackInput => attackInput;
 
+    public override void GameStart()
+    {
+        base.GameStart();
+    }
+
     public void GameLoopUpdate()
     {
+        if (!gameStart) return;
+        
         HandleAllInputs();
     }
 

@@ -9,9 +9,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
+    [SerializeField] private EnemyManager[] enemyManagers;
+
+    [Header("UI関連のクラスの参照")]
     [SerializeField] private CrosshairManager crosshairManager;
     [SerializeField] private HPGauge hpGauge;
-    [SerializeField] private EnemyManager[] enemyManagers;
+    [SerializeField] private TimerManager timerManager;
+    [SerializeField] private StartSignalManager startSignalManager;
+
+    private bool gameStartFlag = false;
 
     private void Awake()
     {
@@ -24,7 +30,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        StartGamePlaySystems();
+        GameInitialize();
     }
 
     private void FixedUpdate()
@@ -35,6 +41,13 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         ForDebug();
+        
+        if (startSignalManager.IsFinished && !gameStartFlag)
+        {
+            GameStart();
+            gameStartFlag = true;
+        }
+
         UpdateGameLoop();
     }
 
@@ -57,9 +70,9 @@ public class GameManager : MonoBehaviour
 
     private void CallCustomAwake()
     {
-        playerManager.Setup();
         playerLocomotionManager.Setup();
-        playerAttackManager.Setup();
+        crosshairManager.Setup();
+        startSignalManager.Setup();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
@@ -68,11 +81,22 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void StartGamePlaySystems()
+    private void GameInitialize()
     {
         playerManager.Initialize();
-        playerLocomotionManager.Initialize();
         playerCamera.Initialize();
+        hpGauge.Initialize();
+    }
+
+    private void GameStart()
+    {
+        playerManager.GameStart();
+        playerInputManager.GameStart();
+        playerAttackManager.GameStart();
+        playerLocomotionManager.GameStart();
+        timerManager.GameStart();
+        crosshairManager.GameStart();
+        hpGauge.GameStart();
     }
 
     private void FixedUpdateGameLoop()
@@ -87,6 +111,7 @@ public class GameManager : MonoBehaviour
         playerLocomotionManager.GameLoopUpdate();
         playerAttackManager.GameLoopUpdate();
         hpGauge.GameLoopUpdate();
+        timerManager.GameLoopUpdate();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
@@ -101,10 +126,6 @@ public class GameManager : MonoBehaviour
 
     private void ForDebug()
     {
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            Cursor.lockState = Cursor.lockState == CursorLockMode.Locked ? CursorLockMode.None : CursorLockMode.Locked;
-            Cursor.visible = !Cursor.visible;
-        }
+
     }
 }

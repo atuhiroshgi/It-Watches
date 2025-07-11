@@ -1,41 +1,26 @@
 using UnityEngine;
 
-public class PlayerWallCheck : MonoBehaviour
+public class PlayerWallCheck : EntityBase
 {
     [Header("壁検出の設定")]
+    [SerializeField] private LayerMask wallLayerMask = ~0;
+    [SerializeField] private CapsuleCollider col;
     [SerializeField] private float rayDistance = 0.6f;
     [SerializeField] private float wallAngleThreshold = 60f;
     [SerializeField] private float rayHeight = 0.5f;
-    [SerializeField] private LayerMask wallLayerMask = ~0;
 
     private float width = 0.5f;
     private float depth = 0.5f;
 
-    private void Awake()
+    public void Setup()
     {
         AutoDetectColliderSize();
     }
 
     private void AutoDetectColliderSize()
     {
-        var box = GetComponentInChildren<Collider>();
-
-        if (box is CapsuleCollider capsule)
-        {
-            width = capsule.radius * 2f;
-            depth = capsule.radius * 2f;
-        }
-        else if (box is BoxCollider boxCollider)
-        {
-            width = boxCollider.size.x * transform.localScale.x;
-            depth = boxCollider.size.z * transform.localScale.z;
-        }
-        else if (box is SphereCollider sphere)
-        {
-            width = sphere.radius * 2f;
-            depth = sphere.radius * 2f;
-        }
-        // 他のコライダーも必要ならここで追加
+        width = col.radius * 2f;
+        depth = col.radius * 2f;
     }
 
     public bool IsWallInFront(Vector3 moveDirection)

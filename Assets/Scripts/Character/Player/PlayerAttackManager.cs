@@ -1,7 +1,10 @@
 using UnityEngine;
 
-public class PlayerAttackManager : MonoBehaviour
+public class PlayerAttackManager : EntityBase
 {
+    [Header("ŽQÆÝ’è")]
+    [SerializeField] private Animator animator;
+
     [Header("UŒ‚‚ÌÝ’è")]
     [SerializeField] private LayerMask attackHitMask;
     [SerializeField] private float attackCoolTime = 0.7f;
@@ -18,7 +21,6 @@ public class PlayerAttackManager : MonoBehaviour
     private PlayerCamera playerCamera;
     private CrosshairManager crosshairManager;
     private EnemyManager currentTargetEnemy;
-    private Animator animator;
     private float lastAttackTime = -Mathf.Infinity;
     private bool isAttack = false;
 
@@ -28,13 +30,15 @@ public class PlayerAttackManager : MonoBehaviour
 
     public bool IsAttack => isAttack;
 
-    public void Setup()
+    public override void GameStart()
     {
-        animator = GetComponentInChildren<Animator>();
+        base.GameStart();
     }
 
     public void GameLoopUpdate()
     {
+        if(!gameStart) return;
+
         if (playerInputManager.AttackInput && Time.time >= lastAttackTime + attackCoolTime)
         {
             animator.SetTrigger("Attack");
