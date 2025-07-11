@@ -15,6 +15,10 @@ public class EnemyAIManager : MonoBehaviour
     [Header("íçéãê›íË")]
     [SerializeField] private float lookAtPlayerDuration = 5f;
 
+    [Header("éãê¸ê›íË")]
+    [SerializeField] private float eyeHeight = 1.0f;
+    [SerializeField] private float playerAimHeight = 0.9f;
+
     private Animator animator;
     private Transform playerTransform;
     private int currentPatrolIndex = 0;
@@ -122,17 +126,21 @@ public class EnemyAIManager : MonoBehaviour
         if (isDownFunc != null && isDownFunc()) return false;
         if (playerTransform == null) return false;
 
-        Vector3 dirToPlayer = (playerTransform.position - transform.position).normalized;
-        float angle = Vector3.Angle(transform.forward, dirToPlayer);
+        Vector3 origin = transform.position + Vector3.up * eyeHeight;
+        Vector3 target = playerTransform.position + Vector3.up * playerAimHeight;
+        Vector3 direction = (target - origin).normalized;
 
+        float angle = Vector3.Angle(transform.forward, direction);
         if (angle < fieldOfView / 2f)
         {
-            Vector3 origin = transform.position + Vector3.up;
-            Vector3 target = playerTransform.position + Vector3.up;
+            Debug.DrawRay(origin, direction * sightRange, Color.green);
 
-            if (Physics.Raycast(origin, (target - origin).normalized, out RaycastHit hit, sightRange, ~obstructionMask))
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, sightRange, ~obstructionMask))
             {
-                return hit.transform == playerTransform;
+                if (hit.transform == playerTransform || hit.transform.root == playerTransform)
+                {
+                    return true;
+                }
             }
         }
 

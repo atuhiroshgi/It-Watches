@@ -491,6 +491,8 @@ MonoBehaviour:
   playerInputManager: {fileID: 1832715783}
   playerLocomotionManager: {fileID: 1832715786}
   playerAttackManager: {fileID: 1832715792}
+  crosshairManager: {fileID: 724069007}
+  hpGauge: {fileID: 1624646114}
   enemyManagers:
   - {fileID: 501560413}
 --- !u!4 &398195775
@@ -687,6 +689,8 @@ MonoBehaviour:
   patrolSpeed: 1
   waitTimeAtPoint: 10
   lookAtPlayerDuration: 5
+  eyeHeight: 1
+  playerAimHeight: 0.8
 --- !u!114 &501560413
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -700,6 +704,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   downDuration: 10
+  damageCooldown: 0.5
 --- !u!136 &501560414
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -734,6 +739,7 @@ GameObject:
   - component: {fileID: 724069004}
   - component: {fileID: 724069006}
   - component: {fileID: 724069005}
+  - component: {fileID: 724069007}
   m_Layer: 5
   m_Name: Crosshair
   m_TagString: Untagged
@@ -773,7 +779,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.23921569}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.23529412}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -798,6 +804,23 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 724069003}
   m_CullTransparentMesh: 1
+--- !u!114 &724069007
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724069003}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ca434367a7577149a35086687083acc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  crosshairImageUI: {fileID: 724069005}
+  defaultCrosshairSprite: {fileID: -794552341, guid: ec480c01aa170b94f975b072f6524db9, type: 3}
+  targetingCrosshairSprite: {fileID: -639809364, guid: 89260516d4a03a64f876a3bfcc4b72f7, type: 3}
+  defaultColor: {r: 1, g: 1, b: 1, a: 0.23529412}
+  targetingColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &754341067
 GameObject:
   m_ObjectHideFlags: 0
@@ -1412,6 +1435,99 @@ MonoBehaviour:
   maxCameraDistance: 4
   leftAndRightLookAngle: 0
   upAndDownLookAngle: 0
+--- !u!1 &1624646110
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1624646111}
+  - component: {fileID: 1624646113}
+  - component: {fileID: 1624646112}
+  - component: {fileID: 1624646114}
+  m_Layer: 5
+  m_Name: HPGauge
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1624646111
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624646110}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1711003746}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 1920, y: 1080}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1624646112
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624646110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: -1848334695, guid: 935a05c78dcdd994e89f050f92e3ffc0, type: 3}
+  m_Type: 3
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 2
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1624646113
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624646110}
+  m_CullTransparentMesh: 1
+--- !u!114 &1624646114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1624646110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18c935d3d2986d043b367d798e980a44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hpGaugeImageUI: {fileID: 1624646112}
+  useGradientColor: 1
+  highColor: {r: 0, g: 1, b: 0, a: 1}
+  midColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  lowColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1625264994
 GameObject:
   m_ObjectHideFlags: 0
@@ -1659,6 +1775,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 724069004}
+  - {fileID: 1624646111}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2013,6 +2130,7 @@ MonoBehaviour:
   attackDuration: 0.4
   attackRange: 200
   crosshairOffsetRatio: 0.1
+  hysteresisFrames: 5
 --- !u!1 &1973768101
 GameObject:
   m_ObjectHideFlags: 0

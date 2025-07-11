@@ -14,6 +14,9 @@ public class PlayerManager : MonoBehaviour
     private float currentHealth;
     private float surpriseTimer = 0f;
 
+    public float MaxHealth => maxHealth;
+    public float CurrentHealth => currentHealth;
+
     public void Setup()
     {
         animator = GetComponentInChildren<Animator>();

@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
     [SerializeField] private CrosshairManager crosshairManager;
+    [SerializeField] private HPGauge hpGauge;
     [SerializeField] private EnemyManager[] enemyManagers;
 
     private void Awake()
@@ -51,6 +52,7 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetPlayerInputManager(playerInputManager);
         playerAttackManager.SetPlayerCamera(playerCamera);
         playerAttackManager.SetCrosshairManager(crosshairManager);
+        hpGauge.SetPlayerManager(playerManager);
     }
 
     private void CallCustomAwake()
@@ -84,6 +86,7 @@ public class GameManager : MonoBehaviour
         playerInputManager.GameLoopUpdate();
         playerLocomotionManager.GameLoopUpdate();
         playerAttackManager.GameLoopUpdate();
+        hpGauge.GameLoopUpdate();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
