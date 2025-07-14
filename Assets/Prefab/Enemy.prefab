@@ -2295,6 +2295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   downDuration: 10
   damageCooldown: 0.5
+  rotateToPlayerSpeed: 100
   enemyAIManager: {fileID: 7933624548883061706}
   animator: {fileID: 135834075237162881}
 --- !u!114 &7933624548883061706
@@ -2312,9 +2313,11 @@ MonoBehaviour:
   obstructionMask:
     serializedVersion: 2
     m_Bits: 64
-  sightRange: 20
+  sightRange: 35
   fieldOfView: 90
-  patrolPoints: []
+  patrolPoints:
+  - {fileID: 0}
+  - {fileID: 0}
   patrolSpeed: 1
   waitTimeAtPoint: 10
   lookAtPlayerDuration: 5
