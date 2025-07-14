@@ -6,6 +6,7 @@ public class EnemyManager : EntityBase
     [Header("パラメータ設定")]
     [SerializeField] private float downDuration = 10f;
     [SerializeField] private float damageCooldown = 0.5f;
+    [SerializeField] private float rotateToPlayerSpeed = 5f;
 
     [Header("参照設定")]
     [SerializeField] private EnemyAIManager enemyAIManager;
@@ -44,14 +45,17 @@ public class EnemyManager : EntityBase
     {
         if (isDown) return;
 
+        // ダメージのクールタイム中はダメージを食らわない
         if (Time.time < lastDamageTime + damageCooldown)
         {
-            // まだダメージクールタイム中なので無視
             return;
         }
 
         lastDamageTime = Time.time;
         damageCount++;
+
+        // プレイヤーの方を向く
+        RotateTowardsPlayer(rotateToPlayerSpeed);
 
         if (damageCount == 1)
         {
@@ -65,6 +69,14 @@ public class EnemyManager : EntityBase
             _ = DownRecoveryAsync();
         }
     }
+
+    private void RotateTowardsPlayer(float speed)
+    {
+        if (playerTransform == null) return;
+
+        transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
+    }
+
 
     private async UniTaskVoid DownRecoveryAsync()
     {
