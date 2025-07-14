@@ -1,4 +1,6 @@
 using UnityEngine;
+using Cysharp.Threading.Tasks;
+using Cysharp.Threading.Tasks.CompilerServices;
 
 public class PlayerLocomotionManager : EntityBase
 {
@@ -18,6 +20,14 @@ public class PlayerLocomotionManager : EntityBase
     [SerializeField] private float maxJumpForce = 12.0f;
     [SerializeField] private float maxJumpPressTime = 0.5f;
 
+    [Header("ワープの設定")]
+    [SerializeField] private LayerMask warpObjectLayer;
+    [SerializeField] private Transform warpTarget;
+
+    [Header("ワープ移動演出")]
+    [SerializeField] private AnimationCurve warpEasing = AnimationCurve.EaseInOut(0, 0, 1, 1);
+    [SerializeField] private LayerMask ignoreCollisionDuringWarp;
+    [SerializeField] private float warpMoveDuration = 1.0f;
 
     private PlayerInputManager playerInputManager;
     private PlayerCamera playerCamera;
@@ -25,6 +35,7 @@ public class PlayerLocomotionManager : EntityBase
     private float jumpPressTime = 0f;
     private bool isMoving = false;
     private bool isJumping = false;
+    private bool isWarping = false;
 
     public void Setup()
     {
@@ -129,6 +140,56 @@ public class PlayerLocomotionManager : EntityBase
         if (animator == null) return;
 
         animator.SetBool("isMoving", isMoving);
+    }
+
+    private async UniTaskVoid WarpThroughObstaclesAsync()
+    {
+        isWarping = true;
+
+        // 衝突回避のためにレイヤー変更
+        int originalLayer = gameObject.layer;
+        gameObject.layer = Mathf.RoundToInt(Mathf.Log(ignoreCollisionDuringWarp.value));
+
+        rb.isKinematic = true;
+        rb.linearVelocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+
+        Vector3 start = transform.position;
+        Vector3 end = warpTarget.position;
+        float elapsedTime = 0f;
+
+        while(elapsedTime < warpMoveDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = warpEasing.Evaluate(elapsedTime / warpMoveDuration);
+            Vector3 newPosition = Vector3.Lerp(start, end, t);
+            rb.MovePosition(newPosition);
+            await UniTask.Yield();
+        }
+
+        rb.MovePosition(end);
+
+        // 復帰処理
+        gameObject.layer = originalLayer;
+        rb.isKinematic = false;
+        isWarping = false;
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(isWarping) return;
+
+        if (((1 << other.gameObject.layer) & warpObjectLayer.value) != 0)
+        {
+            if(warpTarget != null)
+            {
+                WarpThroughObstaclesAsync().Forget();
+            }
+            else
+            {
+                Debug.LogWarning("ワープ先が設定されていません");
+            }
+        }
     }
 
     public void SetPlayerInputManager(PlayerInputManager playerInputManager)
