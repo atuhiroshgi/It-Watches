@@ -72,7 +72,7 @@ public class PlayerAttackManager : EntityBase
         if (Physics.Raycast(ray, out RaycastHit hit, attackRange, attackHitMask))
         {
             EnemyManager enemy = hit.collider.GetComponent<EnemyManager>() ?? hit.collider.GetComponentInParent<EnemyManager>();
-            if (enemy != null && enemy.CanSeePlayer())
+            if (enemy != null)
             {
                 newTarget = enemy;
                 currentCanHit = true;
@@ -80,7 +80,7 @@ public class PlayerAttackManager : EntityBase
         }
 
         // ヒステリシス処理
-        if (currentCanHit)
+        if (currentCanHit && !newTarget.IsDown)
         {
             offCounter = 0;
             stableCanHit = true;

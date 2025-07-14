@@ -66,7 +66,7 @@ public class PlayerLocomotionManager : EntityBase
         Vector3 moveDir = (camForward * inputV + camRight * inputH).normalized;
 
         // 壁にぶつかりそうなら移動を無効にする
-        if (playerWallCheck != null && playerWallCheck.IsWallInFront(moveDir))
+        if (playerWallCheck != null && playerWallCheck.IsWallInFront(moveDir) && isJumping)
         {
             moveDir = Vector3.zero;
         }
