@@ -138,10 +138,11 @@ public class EnemyAIManager : EntityBase
         float angle = Vector3.Angle(transform.forward, direction);
         if (angle < fieldOfView / 2f)
         {
-            Debug.DrawRay(origin, direction * sightRange, Color.green);
+            Debug.DrawRay(origin, direction * sightRange, Color.red); // デバッグ可視化
 
-            if (Physics.Raycast(origin, direction, out RaycastHit hit, sightRange, ~obstructionMask))
+            if (Physics.Raycast(origin, direction, out RaycastHit hit, sightRange))
             {
+                // Rayが最初に当たったオブジェクトがプレイヤーなら視認成功
                 if (hit.transform == playerTransform || hit.transform.root == playerTransform)
                 {
                     return true;
@@ -151,6 +152,7 @@ public class EnemyAIManager : EntityBase
 
         return false;
     }
+
 
     public void SetPlayerTransform(Transform playerTransform)
     {

@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HPGauge hpGauge;
     [SerializeField] private TimerManager timerManager;
     [SerializeField] private StartSignalManager startSignalManager;
+    [SerializeField] private SkillGauge skillGauge;
 
     private bool gameStartFlag = false;
 
@@ -65,6 +66,7 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetPlayerInputManager(playerInputManager);
         playerAttackManager.SetPlayerCamera(playerCamera);
         playerAttackManager.SetCrosshairManager(crosshairManager);
+        playerAttackManager.SetSkillGauge(skillGauge);
         hpGauge.SetPlayerManager(playerManager);
     }
 
@@ -97,6 +99,7 @@ public class GameManager : MonoBehaviour
         timerManager.GameStart();
         crosshairManager.GameStart();
         hpGauge.GameStart();
+        skillGauge.GameStart();
     }
 
     private void FixedUpdateGameLoop()
@@ -112,6 +115,7 @@ public class GameManager : MonoBehaviour
         playerAttackManager.GameLoopUpdate();
         hpGauge.GameLoopUpdate();
         timerManager.GameLoopUpdate();
+        skillGauge.GameLoopUpdate();
 
         foreach (EnemyManager enemy in enemyManagers)
         {

@@ -21,6 +21,7 @@ public class PlayerAttackManager : EntityBase
     private PlayerCamera playerCamera;
     private CrosshairManager crosshairManager;
     private EnemyManager currentTargetEnemy;
+    private SkillGauge skillGauge;
     private float lastAttackTime = -Mathf.Infinity;
     private bool isAttack = false;
 
@@ -41,6 +42,8 @@ public class PlayerAttackManager : EntityBase
 
         if (playerInputManager.AttackInput && Time.time >= lastAttackTime + attackCoolTime)
         {
+            if (!skillGauge.DecreaseSkillCount(1)) return;
+
             animator.SetTrigger("Attack");
             lastAttackTime = Time.time;
             isAttack = true;
@@ -116,5 +119,10 @@ public class PlayerAttackManager : EntityBase
     public void SetCrosshairManager(CrosshairManager crosshairManager)
     {
         this.crosshairManager = crosshairManager;
+    }
+
+    public void SetSkillGauge(SkillGauge skillGauge)
+    {
+        this.skillGauge = skillGauge;
     }
 }
