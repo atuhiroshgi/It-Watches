@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
     [SerializeField] private EnemyManager[] enemyManagers;
+    [SerializeField] private CheckPoint[] checkPoints;
 
     [Header("UI関連のクラスの参照")]
     [SerializeField] private CrosshairManager crosshairManager;
@@ -17,6 +18,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TimerManager timerManager;
     [SerializeField] private StartSignalManager startSignalManager;
     [SerializeField] private SkillGauge skillGauge;
+    [SerializeField] private ProgressPanel progressPanel;
 
     private bool gameStartFlag = false;
 
@@ -68,6 +70,12 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetCrosshairManager(crosshairManager);
         playerAttackManager.SetSkillGauge(skillGauge);
         hpGauge.SetPlayerManager(playerManager);
+        progressPanel.SetPlayerLocomotionManager(playerLocomotionManager);
+
+        foreach(CheckPoint checkPoint in checkPoints)
+        {
+            checkPoint.SetProgressPanel(progressPanel);
+        }
     }
 
     private void CallCustomAwake()
@@ -88,6 +96,7 @@ public class GameManager : MonoBehaviour
         playerManager.Initialize();
         playerCamera.Initialize();
         hpGauge.Initialize();
+        progressPanel.Initialize();
     }
 
     private void GameStart()
@@ -100,6 +109,7 @@ public class GameManager : MonoBehaviour
         crosshairManager.GameStart();
         hpGauge.GameStart();
         skillGauge.GameStart();
+        progressPanel.GameStart();
     }
 
     private void FixedUpdateGameLoop()
@@ -116,10 +126,16 @@ public class GameManager : MonoBehaviour
         hpGauge.GameLoopUpdate();
         timerManager.GameLoopUpdate();
         skillGauge.GameLoopUpdate();
+        progressPanel.GameLoopUpdate();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
             enemy.GameLoopUpdate();
+        }
+
+        foreach(CheckPoint checkPoint in checkPoints)
+        {
+            checkPoint.GameLoopUpdate();
         }
     }
 

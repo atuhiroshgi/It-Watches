@@ -37,6 +37,8 @@ public class PlayerLocomotionManager : EntityBase
     private bool isJumping = false;
     private bool isWarping = false;
 
+    public bool IsMoving => isMoving;
+
     public void Setup()
     {
         playerWallCheck.Setup();
