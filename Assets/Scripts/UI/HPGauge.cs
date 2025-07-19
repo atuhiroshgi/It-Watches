@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using Cysharp.Threading.Tasks;
 
 public class HPGauge : EntityBase
 {
@@ -15,6 +16,7 @@ public class HPGauge : EntityBase
     [SerializeField] private Color lowColor = Color.red;
 
     private PlayerManager playerManager;
+    private bool isAnimating = false;
 
     public void Initialize()
     {
@@ -31,6 +33,7 @@ public class HPGauge : EntityBase
         if (playerManager == null || hpGaugeImageUI == null || !gameStart) return;
 
         float healthRatio = playerManager.CurrentHealth / playerManager.MaxHealth;
+        
         hpGaugeImageUI.fillAmount = healthRatio;
 
         // êFÇÃê›íË

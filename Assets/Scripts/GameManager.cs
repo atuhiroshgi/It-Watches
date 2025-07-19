@@ -1,4 +1,4 @@
-using Unity.VisualScripting;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -9,8 +9,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
+    [SerializeField] private CheckPointGenerator checkPointGenerator;
     [SerializeField] private EnemyManager[] enemyManagers;
-    [SerializeField] private CheckPoint[] checkPoints;
+    [SerializeField] private CheckPoint fixedCheckPoint;
 
     [Header("UI関連のクラスの参照")]
     [SerializeField] private CrosshairManager crosshairManager;
@@ -20,6 +21,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private SkillGauge skillGauge;
     [SerializeField] private ProgressPanel progressPanel;
 
+    private readonly List<CheckPoint> dynamicCheckPoints = new();
     private bool gameStartFlag = false;
 
     private void Awake()
@@ -27,8 +29,15 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        checkPointGenerator.OnCheckPointSpawned += RegisterCheckPoint;
+
         InjectDependencies();
         CallCustomAwake();
+    }
+
+    private void OnDestroy()
+    {
+        checkPointGenerator.OnCheckPointSpawned -= RegisterCheckPoint;
     }
 
     private void Start()
@@ -71,11 +80,7 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetSkillGauge(skillGauge);
         hpGauge.SetPlayerManager(playerManager);
         progressPanel.SetPlayerLocomotionManager(playerLocomotionManager);
-
-        foreach(CheckPoint checkPoint in checkPoints)
-        {
-            checkPoint.SetProgressPanel(progressPanel);
-        }
+        fixedCheckPoint.SetProgressPanel(progressPanel);
     }
 
     private void CallCustomAwake()
@@ -83,6 +88,7 @@ public class GameManager : MonoBehaviour
         playerLocomotionManager.Setup();
         crosshairManager.Setup();
         startSignalManager.Setup();
+        checkPointGenerator.Setup();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
@@ -127,13 +133,14 @@ public class GameManager : MonoBehaviour
         timerManager.GameLoopUpdate();
         skillGauge.GameLoopUpdate();
         progressPanel.GameLoopUpdate();
+        fixedCheckPoint.GameLoopUpdate();
 
         foreach (EnemyManager enemy in enemyManagers)
         {
             enemy.GameLoopUpdate();
         }
 
-        foreach(CheckPoint checkPoint in checkPoints)
+        foreach(CheckPoint checkPoint in dynamicCheckPoints)
         {
             checkPoint.GameLoopUpdate();
         }
@@ -142,6 +149,14 @@ public class GameManager : MonoBehaviour
     private void LateUpdateGameLoop()
     {
         playerCamera.GameLoopLateUpdate();
+    }
+
+    private void RegisterCheckPoint(CheckPoint checkPoint)
+    {
+        if(checkPoint == null) return;
+
+        dynamicCheckPoints.Add(checkPoint);
+        checkPoint.SetProgressPanel(progressPanel);
     }
 
     private void ForDebug()

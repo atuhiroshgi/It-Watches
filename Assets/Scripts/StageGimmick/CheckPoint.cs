@@ -46,7 +46,6 @@ public class CheckPoint : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("“ü‚Á‚½");
         if (IsInLayerMask(collision.gameObject, playerLayerMask))
         {
             isPlayerTouching = true;
