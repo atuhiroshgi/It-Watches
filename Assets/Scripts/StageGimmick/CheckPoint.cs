@@ -9,6 +9,7 @@ public class CheckPoint : MonoBehaviour
     [SerializeField] private float gaugeFillRate = 1f;
     [SerializeField] private float gaugeThreshold = 10f;
 
+    private CheckPointPrompt checkPointPrompt;
     private ProgressPanel progressPanel;
     private float currentGauge = 0f;
     private bool isPlayerTouching = false;
@@ -19,6 +20,8 @@ public class CheckPoint : MonoBehaviour
         if (isPlayerTouching && Input.GetKey(KeyCode.E))
         {
             currentGauge += gaugeFillRate * Time.deltaTime;
+
+            NotifyCurrentGauge();
 
             // ゲージが目標値を達したらマテリアルを変更
             if(currentGauge >= gaugeThreshold && !isGaugeFilled)
@@ -44,11 +47,18 @@ public class CheckPoint : MonoBehaviour
         progressPanel?.AdvanceProgressIcon();
     }
 
+    private void NotifyCurrentGauge()
+    {
+        checkPointPrompt.UpdateGauge(currentGauge / gaugeThreshold);
+    }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (IsInLayerMask(collision.gameObject, playerLayerMask))
         {
             isPlayerTouching = true;
+            checkPointPrompt.ShowPrompt();
+            NotifyCurrentGauge();
         }
     }
 
@@ -57,6 +67,7 @@ public class CheckPoint : MonoBehaviour
         if (IsInLayerMask(collision.gameObject, playerLayerMask))
         {
             isPlayerTouching = false;
+            checkPointPrompt.HidePrompt();
         }
     }
 
@@ -68,5 +79,10 @@ public class CheckPoint : MonoBehaviour
     public void SetProgressPanel(ProgressPanel progressPanel)
     {
         this.progressPanel = progressPanel;
+    }
+
+    public void SetCheckPointPrompt(CheckPointPrompt checkPointPrompt)
+    {
+        this.checkPointPrompt = checkPointPrompt;
     }
 }

@@ -20,6 +20,11 @@ public class CrosshairManager : EntityBase
         crosshairImageUI.enabled = true;
     }
 
+    public override void GameEnd()
+    {
+        base.GameEnd();
+    }
+
     public void SetActiveState(bool canHit)
     {
         if (crosshairImageUI == null) return;

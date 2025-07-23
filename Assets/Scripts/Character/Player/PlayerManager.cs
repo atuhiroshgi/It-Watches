@@ -12,12 +12,17 @@ public class PlayerManager : EntityBase
     [SerializeField] private float damagePerSecond = 5f;
     [SerializeField] private float maxHealth = 100f;
 
+    [Header("チェックポイントのレイヤー")]
+    [SerializeField] private LayerMask checkPointLayer;
+
     private EnemyManager[] enemies;
     private float currentHealth;
     private float surpriseTimer = 0f;
+    private bool onCheckPoint = false;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
+    public bool OnCheckPoint => onCheckPoint;
 
     public void Initialize()
     {
@@ -27,6 +32,11 @@ public class PlayerManager : EntityBase
     public override void GameStart()
     {
         base.GameStart();
+    }
+
+    public override void GameEnd()
+    {
+        base.GameEnd();
     }
 
     public void GameLoopUpdate()
@@ -79,6 +89,21 @@ public class PlayerManager : EntityBase
         
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (((1 << collision.gameObject.layer) & checkPointLayer) != 0)
+        {
+            onCheckPoint = true;
+        }
+    }
+
+    private void OnCollisionExit(Collision collision)
+    {
+        if (((1 << collision.gameObject.layer) & checkPointLayer) != 0)
+        {
+            onCheckPoint = false;
+        }
+    }
     public void SetEnemyManagers(EnemyManager[] enemies)
     {
         this.enemies = enemies;

@@ -28,6 +28,11 @@ public class HPGauge : EntityBase
         base.GameStart();
     }
 
+    public override void GameEnd()
+    {
+        base.GameEnd();
+    }
+
     public void GameLoopUpdate()
     {
         if (playerManager == null || hpGaugeImageUI == null || !gameStart) return;

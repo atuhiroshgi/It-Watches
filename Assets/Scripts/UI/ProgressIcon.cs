@@ -8,9 +8,13 @@ public class ProgressIcon : MonoBehaviour
     [SerializeField] private Sprite defaultImage;
     [SerializeField] private Sprite completeImage;
 
+    private bool isComplete = false;
+
+    public bool IsComplete => isComplete;
+
     public void ChangeIcon()
     {
-        Debug.Log("s‚¯‚Ä‚ñ‚Å");
+        isComplete = true;
         progressIconUI.sprite = completeImage;
     }
 }

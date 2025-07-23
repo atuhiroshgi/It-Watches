@@ -8,4 +8,9 @@ public class EntityBase : MonoBehaviour
     {
         gameStart = true;
     }
+
+    public virtual void GameEnd()
+    {
+        gameStart = false;
+    }
 }

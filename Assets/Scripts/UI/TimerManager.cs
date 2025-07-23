@@ -21,6 +21,12 @@ public class TimerManager : EntityBase
         UpdateTimerText();
     }
 
+    public override void GameEnd()
+    {
+        base.GameEnd();
+        isCountingDown = false;
+    }
+
     public void GameLoopUpdate()
     {
         if (!isCountingDown) return;

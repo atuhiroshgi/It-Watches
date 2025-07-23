@@ -50,6 +50,11 @@ public class PlayerLocomotionManager : EntityBase
         base.GameStart();
     }
 
+    public override void GameEnd()
+    {
+        base.GameEnd();
+    }
+
     public void GameLoopUpdate()
     {
         if(!gameStart) return;
