@@ -40,6 +40,7 @@ Material:
     m_TexEnvs: []
     m_Ints: []
     m_Floats:
+    - _Metallic: 0
     - _Smoothness: 0
     - _WorkflowMode: 1
     m_Colors:

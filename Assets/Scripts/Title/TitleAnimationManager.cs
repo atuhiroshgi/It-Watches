@@ -21,7 +21,8 @@ public class TitleAnimationManager : MonoBehaviour
     [SerializeField] private float attackStartDelay = 0.5f;
     [SerializeField] private float attackEndDelay = 0.5f;
     [SerializeField] private float postAttackDelay = 1f;
-    [SerializeField] private float logoSlideHeight = 5f;
+    [SerializeField] private float playerSlideHeight = 10f;
+    [SerializeField] private Quaternion targetRotation = Quaternion.Euler(0, 0, 0);
 
     private Vector3 logoStartPosition;
     private Vector3 initialPlayerPosition;
@@ -42,12 +43,12 @@ public class TitleAnimationManager : MonoBehaviour
 
         // スライドアウト
         Vector3 currentPos = playerTransform.position;
-        Vector3 slideOutPos = currentPos + Vector3.up * logoSlideHeight;
-        await SlideAsync(playerTransform, currentPos, slideOutPos, slideDuration);
+        Vector3 upwardPos = currentPos + Vector3.up * playerSlideHeight;
+        await SlideAsync(playerTransform, currentPos, upwardPos, slideDuration);
 
         // 中間点
-        Vector3 midPos = new Vector3(pushPosition.x, slideOutPos.y, slideOutPos.z);
-        await SlideAsync(playerTransform, slideOutPos, midPos, slideDuration / 2f);
+        Vector3 midPos = new Vector3(pushPosition.x, upwardPos.y, upwardPos.z);
+        await SlideAsync(playerTransform, upwardPos, midPos, slideDuration / 2f);
 
         // スライドイン
         Vector3 slideInTarget = pushPosition + pushOffset;
@@ -59,6 +60,8 @@ public class TitleAnimationManager : MonoBehaviour
 
     private async UniTask HideLogoAndShrinkPlayerAsync()
     {
+        playerTransform.rotation = targetRotation;
+
         float elapsed = 0f;
         while (elapsed < hideDuration)
         {

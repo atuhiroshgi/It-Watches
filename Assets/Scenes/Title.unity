@@ -471,7 +471,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 700, y: 30}
+  m_AnchoredPosition: {x: 300, y: 30}
   m_SizeDelta: {x: 2150, y: 250}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &404482093
@@ -617,7 +617,8 @@ MonoBehaviour:
   attackStartDelay: 0.5
   attackEndDelay: 0.5
   postAttackDelay: 1
-  logoSlideHeight: 5
+  playerSlideHeight: 10
+  targetRotation: {x: 0, y: 0, z: 0, w: 1}
 --- !u!4 &475681309
 Transform:
   m_ObjectHideFlags: 0
