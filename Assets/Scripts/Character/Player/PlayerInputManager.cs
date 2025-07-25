@@ -11,6 +11,7 @@ public class PlayerInputManager : EntityBase
     private bool jumpInputDown;
     private bool jumpInputUp;
     private bool attackInput;
+    private bool skillInput;
 
     public float VerticalInput => verticalInput;
     public float HorizontalInput => horizontalInput;
@@ -20,6 +21,7 @@ public class PlayerInputManager : EntityBase
     public bool JumpInputDown => jumpInputDown;
     public bool JumpInputUp => jumpInputUp;
     public bool AttackInput => attackInput;
+    public bool SkillInput => skillInput;
 
     public override void GameStart()
     {
@@ -44,6 +46,7 @@ public class PlayerInputManager : EntityBase
         HandleCameraMovementInput();
         HandleJumpInput();
         HandleAttackInput();
+        HandleSkillInput();
     }
 
     private void HandlePlayerMovementInput()
@@ -68,5 +71,10 @@ public class PlayerInputManager : EntityBase
     private void HandleAttackInput()
     {
         attackInput = Input.GetMouseButton(0);
+    }
+
+    private void HandleSkillInput()
+    {
+        skillInput = Input.GetMouseButton(1);
     }
 }

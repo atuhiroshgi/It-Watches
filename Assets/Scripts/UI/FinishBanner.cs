@@ -1,10 +1,15 @@
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 using Cysharp.Threading.Tasks;
 
 public class FinishBanner : MonoBehaviour
 {
-    [Header("UI設定")]
+    [Header("ゲームデータの参照")]
+    [SerializeField] private GameStateData gameStateData;
+
+    [Header("UI参照")]
     [SerializeField] private RectTransform bannerTransform;
 
     [Header("表示位置")]
@@ -17,7 +22,7 @@ public class FinishBanner : MonoBehaviour
     [SerializeField] private float visibleDuration = 2f;
 
     [Header("クリア後のシーン名")]
-    [SerializeField] private string clearSceneName = "";
+    [SerializeField] private string gameOverSceneName = "";
 
     public void Setup()
     {
@@ -25,8 +30,10 @@ public class FinishBanner : MonoBehaviour
         bannerTransform.anchoredPosition = leftOffScreen;
     }
 
-    public async UniTaskVoid ShowFinishBannerAsync()
+    public async UniTaskVoid ShowFinishBannerAsync(bool isCleared)
     {
+        gameStateData.SetIsCleared(isCleared);
+
         // スライドイン（左 → 中央）
         await SlideAsync(from: leftOffScreen, to: centerScreen);
 
@@ -36,7 +43,7 @@ public class FinishBanner : MonoBehaviour
         // スライドアウト（中央 → 右）
         await SlideAsync(from: centerScreen, to: rightOffScreen);
 
-        await SceneManager.LoadSceneAsync(clearSceneName);
+        await SceneManager.LoadSceneAsync(gameOverSceneName);
     }
 
     private async UniTask SlideAsync(Vector2 from, Vector2 to)

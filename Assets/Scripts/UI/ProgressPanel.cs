@@ -58,8 +58,8 @@ public class ProgressPanel : EntityBase
         if (CheckClear() && !isClear)
         {
             isClear = true;
-            gameStateData.clearTime = timerManager.RemainingTime;
-            finishBanner?.ShowFinishBannerAsync().Forget();
+            gameStateData.SetClearTime(timerManager.RemainingTime);
+            finishBanner?.ShowFinishBannerAsync(true).Forget();
         }
 
         if(playerManager != null)

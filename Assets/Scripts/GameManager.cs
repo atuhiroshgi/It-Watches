@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerInputManager playerInputManager;
     [SerializeField] private PlayerLocomotionManager playerLocomotionManager;
     [SerializeField] private PlayerAttackManager playerAttackManager;
+    [SerializeField] private PlayerSkillManager playerSkillManager;
     [SerializeField] private CheckPointGenerator checkPointGenerator;
     [SerializeField] private CheckPoint fixedCheckPoint;
     [SerializeField] private EnemyManager[] enemyManagers;
@@ -80,7 +81,8 @@ public class GameManager : MonoBehaviour
     private void InjectDependencies()
     {
         playerManager.SetEnemyManagers(enemyManagers);
-        
+        playerManager.SetFinishBanner(finishBanner);
+
         playerCamera.SetPlayerInputManager(playerInputManager);
         
         playerLocomotionManager.SetPlayerInputManager(playerInputManager);
@@ -91,6 +93,9 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetCrosshairManager(crosshairManager);
         playerAttackManager.SetSkillGauge(skillGauge);
         
+        playerSkillManager.SetPlayerInputManager(playerInputManager);
+        playerSkillManager.SetSkillGauge(skillGauge);
+
         hpGauge.SetPlayerManager(playerManager);
         
         progressPanel.SetPlayerManager(playerManager);
@@ -105,6 +110,7 @@ public class GameManager : MonoBehaviour
     private void CallCustomAwake()
     {
         playerLocomotionManager.Setup();
+        playerSkillManager.Setup();
         crosshairManager.Setup();
         startSignalManager.Setup();
         checkPointGenerator.Setup();
@@ -162,6 +168,7 @@ public class GameManager : MonoBehaviour
         playerInputManager.GameLoopUpdate();
         playerLocomotionManager.GameLoopUpdate();
         playerAttackManager.GameLoopUpdate();
+        playerSkillManager.GameLoopUpdate();
         hpGauge.GameLoopUpdate();
         timerManager.GameLoopUpdate();
         skillGauge.GameLoopUpdate();

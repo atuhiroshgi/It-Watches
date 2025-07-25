@@ -16,6 +16,7 @@ public class PlayerManager : EntityBase
     [SerializeField] private LayerMask checkPointLayer;
 
     private EnemyManager[] enemies;
+    private FinishBanner finishBanner;
     private float currentHealth;
     private float surpriseTimer = 0f;
     private bool onCheckPoint = false;
@@ -86,7 +87,7 @@ public class PlayerManager : EntityBase
 
     private void OnPlayerDeath()
     {
-        
+        finishBanner.ShowFinishBannerAsync(false).Forget();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -107,5 +108,10 @@ public class PlayerManager : EntityBase
     public void SetEnemyManagers(EnemyManager[] enemies)
     {
         this.enemies = enemies;
+    }
+
+    public void SetFinishBanner(FinishBanner finishBanner)
+    {
+        this.finishBanner = finishBanner;
     }
 }

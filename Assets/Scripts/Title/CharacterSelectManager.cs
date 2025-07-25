@@ -74,7 +74,7 @@ public class CharacterSelectManager : MonoBehaviour
             else if (isConfirming && Input.GetKeyDown(KeyCode.Space) && !isSliding)
             {
                 // Šm’è ¨ ‘I‘ğŠ®—¹
-                gameStateData.selectedCharacterIndex = selectIndex;
+                gameStateData.SetSelectedCharacterIndex(selectIndex);
                 return selectIndex;
             }
             else if (Input.GetKeyDown(KeyCode.Escape) && isConfirming && !isSliding)
