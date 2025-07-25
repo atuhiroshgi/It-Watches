@@ -12,7 +12,7 @@ public class PlayerAttackManager : EntityBase
     [SerializeField] private float attackRange = 3f;
 
     [Header("照準の調整(画面の高さに対する割合)")]
-    [SerializeField, Range(0f, 0.5f)] private float crosshairOffsetRatio = 0.1f;
+    [SerializeField, Range(0f, 0.5f)] private float crosshairOffsetRatio = 0.08f;
 
     [Header("クロスヘア ヒステリシス(OFF判定までの連続フレーム数)")]
     [SerializeField, Range(1, 10)] private int hysteresisFrames = 5;

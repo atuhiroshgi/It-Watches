@@ -4,7 +4,8 @@ using Cysharp.Threading.Tasks;
 
 public class StartSignalManager : MonoBehaviour
 {
-    [Header("表示用TextMeshProUGUI")]
+    [Header("UIの参照")]
+    [SerializeField] private GameObject startSignalUI;
     [SerializeField] private TMPro.TextMeshProUGUI messageText;
 
     [Header("演出時間")]
@@ -57,7 +58,7 @@ public class StartSignalManager : MonoBehaviour
 
         await UniTask.Delay((int)(goShowDuration * 1000));
 
-        messageText.gameObject.SetActive(false);
+        startSignalUI.SetActive(false);
         isFinished = true;
     }
 

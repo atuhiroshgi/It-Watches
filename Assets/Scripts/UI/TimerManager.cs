@@ -12,6 +12,7 @@ public class TimerManager : EntityBase
     private float remainingTime;
     private bool isCountingDown = false;
 
+    public float RemainingTime => remainingTime;
     public bool IsCountingDown => isCountingDown;
 
     public override void GameStart()

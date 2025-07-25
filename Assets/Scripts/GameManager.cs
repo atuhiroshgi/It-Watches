@@ -96,6 +96,7 @@ public class GameManager : MonoBehaviour
         progressPanel.SetPlayerManager(playerManager);
         progressPanel.SetPlayerLocomotionManager(playerLocomotionManager);
         progressPanel.SetFinishBanner(finishBanner);
+        progressPanel.SetTimerManager(timerManager);
 
         fixedCheckPoint.SetProgressPanel(progressPanel);
         fixedCheckPoint.SetCheckPointPrompt(checkPointPrompt);

@@ -5,6 +5,9 @@ using System;
 
 public class ProgressPanel : EntityBase
 {
+    [Header("ゲームデータの参照")]
+    [SerializeField] private GameStateData gameStateData;
+
     [Header("UI設定")]
     [SerializeField] private RectTransform panelTransform;
     [SerializeField] private Vector2 hiddenPosition = new Vector2(0, -300);
@@ -20,6 +23,7 @@ public class ProgressPanel : EntityBase
     private PlayerManager playerManager;
     private PlayerLocomotionManager playerLocomotionManager;
     private FinishBanner finishBanner;
+    private TimerManager timerManager;
     private CancellationTokenSource cts = new CancellationTokenSource();
     private int iconsIndex = 0;
     private bool isHandling = false;
@@ -54,6 +58,7 @@ public class ProgressPanel : EntityBase
         if (CheckClear() && !isClear)
         {
             isClear = true;
+            gameStateData.clearTime = timerManager.RemainingTime;
             finishBanner?.ShowFinishBannerAsync().Forget();
         }
 
@@ -176,6 +181,11 @@ public class ProgressPanel : EntityBase
     public void SetFinishBanner(FinishBanner finishBanner)
     {
         this.finishBanner = finishBanner;
+    }
+
+    public void SetTimerManager(TimerManager timerManager)
+    {
+        this.timerManager = timerManager;
     }
 
     public void ClearDebug()

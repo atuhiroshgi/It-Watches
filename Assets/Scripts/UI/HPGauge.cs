@@ -16,8 +16,7 @@ public class HPGauge : EntityBase
     [SerializeField] private Color lowColor = Color.red;
 
     private PlayerManager playerManager;
-    private bool isAnimating = false;
-
+    
     public void Initialize()
     {
         hpGaugeImageUI.color = highColor;

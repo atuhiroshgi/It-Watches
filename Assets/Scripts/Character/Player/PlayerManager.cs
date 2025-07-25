@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PlayerManager : EntityBase
 {
-    [Header("参照設定")]
+    [Header("アニメーターの参照")]
     [SerializeField] private Animator animator;
 
     [Header("アニメーションの設定")]
