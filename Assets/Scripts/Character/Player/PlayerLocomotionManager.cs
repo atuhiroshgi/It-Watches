@@ -37,6 +37,7 @@ public class PlayerLocomotionManager : EntityBase
     private bool isJumping = false;
     private bool isWarping = false;
 
+    public float MoveSpeed => moveSpeed;
     public bool IsMoving => isMoving;
 
     public void Setup()
@@ -180,6 +181,11 @@ public class PlayerLocomotionManager : EntityBase
         gameObject.layer = originalLayer;
         rb.isKinematic = false;
         isWarping = false;
+    }
+
+    public void SetMoveSpeed(float speed)
+    {
+        this.moveSpeed = speed;
     }
 
     private void OnTriggerEnter(Collider other)

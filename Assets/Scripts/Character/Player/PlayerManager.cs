@@ -20,10 +20,12 @@ public class PlayerManager : EntityBase
     private float currentHealth;
     private float surpriseTimer = 0f;
     private bool onCheckPoint = false;
+    private bool isHidden = false;
 
     public float MaxHealth => maxHealth;
     public float CurrentHealth => currentHealth;
     public bool OnCheckPoint => onCheckPoint;
+    public bool IsHidden => isHidden;
 
     public void Initialize()
     {
@@ -76,6 +78,8 @@ public class PlayerManager : EntityBase
 
     private void ApplyDamage(float amount)
     {
+        if (isHidden) return;
+
         currentHealth -= amount;
         currentHealth = Mathf.Clamp(currentHealth, 0f, maxHealth);
 
@@ -113,5 +117,10 @@ public class PlayerManager : EntityBase
     public void SetFinishBanner(FinishBanner finishBanner)
     {
         this.finishBanner = finishBanner;
+    }
+
+    public void SetIsHidden(bool isHidden)
+    {
+        this.isHidden = isHidden;
     }
 }

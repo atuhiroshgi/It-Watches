@@ -94,7 +94,9 @@ public class GameManager : MonoBehaviour
         playerAttackManager.SetSkillGauge(skillGauge);
         
         playerSkillManager.SetPlayerInputManager(playerInputManager);
+        playerSkillManager.SetPlayerLocomotionManager(playerLocomotionManager);
         playerSkillManager.SetSkillGauge(skillGauge);
+        playerSkillManager.SetPlayerManager(playerManager);
 
         hpGauge.SetPlayerManager(playerManager);
         
@@ -118,7 +120,7 @@ public class GameManager : MonoBehaviour
 
         foreach (EnemyManager enemy in enemyManagers)
         {
-            enemy.SetPlayerTransform(playerLocomotionManager.transform);
+            enemy.SetPlayerManager(playerManager);
             enemy.Setup();
         }
     }

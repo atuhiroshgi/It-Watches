@@ -12,7 +12,7 @@ public class EnemyManager : EntityBase
     [SerializeField] private EnemyAIManager enemyAIManager;
     [SerializeField] private Animator animator;
 
-    private Transform playerTransform;
+    private PlayerManager playerManager;
     private int damageCount = 0;
     private float lastDamageTime = -Mathf.Infinity;
     private bool isDown = false;
@@ -22,7 +22,7 @@ public class EnemyManager : EntityBase
     public void Setup()
     {
         enemyAIManager.SetEnemyAnimator(animator);
-        enemyAIManager.SetPlayerTransform(playerTransform);
+        enemyAIManager.SetPlayerManager(playerManager);
         enemyAIManager.SetIsDownFunc(() => IsDown);
     }
 
@@ -72,9 +72,9 @@ public class EnemyManager : EntityBase
 
     private void RotateTowardsPlayer(float speed)
     {
-        if (playerTransform == null) return;
+        if (playerManager.gameObject.transform == null) return;
 
-        transform.LookAt(new Vector3(playerTransform.position.x, transform.position.y, playerTransform.position.z));
+        transform.LookAt(new Vector3(playerManager.gameObject.transform.position.x, transform.position.y, playerManager.gameObject.transform.position.z));
     }
 
 
@@ -86,8 +86,8 @@ public class EnemyManager : EntityBase
         damageCount = 0;
     }
 
-    public void SetPlayerTransform(Transform playerTransform)
+    public void SetPlayerManager(PlayerManager playerManager)
     {
-        this.playerTransform = playerTransform;
+        this.playerManager = playerManager;
     }
 }

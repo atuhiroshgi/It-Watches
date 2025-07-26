@@ -1,5 +1,6 @@
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class PlayerSkillManager : MonoBehaviour
 {
@@ -10,11 +11,17 @@ public class PlayerSkillManager : MonoBehaviour
     [SerializeField] private SkinnedMeshRenderer skinnedMeshRenderer;
     [SerializeField] private Material[] characterMaterials;
 
-    [Header("デフォルトスキルの設定")]
+    [Header("デフォルトスキル")]
     [SerializeField] private Light directionalLight;
 
+    [Header("隠れるスキル")]
+    [SerializeField] private SkinnedMeshRenderer playerSkin;
+    [SerializeField] private Material hiddenMaterial;
+
     private SkillBase currentSkill;
+    private PlayerManager playerManager;
     private PlayerInputManager playerInputManager;
+    private PlayerLocomotionManager playerLocomotionManager;
     private SkillGauge skillGauge;
     private int selectedCharacterIndex;
 
@@ -27,9 +34,9 @@ public class PlayerSkillManager : MonoBehaviour
 
     public void GameLoopUpdate()
     {
-        if (playerInputManager.SkillInput)
+        if (playerInputManager.SkillInput && skillGauge.DecreaseSkillCount(currentSkill.GetSkillCost()))
         {
-            skillGauge.DecreaseSkillCount(currentSkill.Activate());
+            currentSkill.Activate();
         }
     }
 
@@ -43,7 +50,11 @@ public class PlayerSkillManager : MonoBehaviour
         switch (selectedCharacterIndex)
         {
             case 0:
-                currentSkill = new DefaultSkill(directionalLight);
+                currentSkill = new DefaultSkill(1, directionalLight);
+                break;
+
+            case 1:
+                currentSkill = new HiddenSkill(2, playerManager, skinnedMeshRenderer, hiddenMaterial, playerLocomotionManager, 5f);
                 break;
 
             default:
@@ -57,8 +68,18 @@ public class PlayerSkillManager : MonoBehaviour
         this.playerInputManager = playerInputManager;
     }
 
+    public void SetPlayerLocomotionManager(PlayerLocomotionManager playerLocomotionManager)
+    {
+        this.playerLocomotionManager = playerLocomotionManager;
+    }
+
     public void SetSkillGauge(SkillGauge skillGauge)
     {
         this.skillGauge = skillGauge;
+    }
+
+    public void SetPlayerManager(PlayerManager playerManager)
+    {
+        this.playerManager = playerManager;
     }
 }

@@ -20,7 +20,7 @@ public class EnemyAIManager : EntityBase
     [SerializeField] private float playerAimHeight = 0.9f;
 
     private Animator animator;
-    private Transform playerTransform;
+    private PlayerManager playerManager;
     private int currentPatrolIndex = 0;
     private float waitTimer = 0f;
     private float lookAtTimer = 0f;
@@ -114,9 +114,10 @@ public class EnemyAIManager : EntityBase
 
     private void LookAtPlayer()
     {
-        if (playerTransform == null) return;
+        if (playerManager.gameObject.transform == null) return;
+        if (playerManager.IsHidden) return;
 
-        Vector3 direction = (playerTransform.position - transform.position);
+        Vector3 direction = (playerManager.gameObject.transform.position - transform.position);
         direction.y = 0f;
 
         if (direction.sqrMagnitude > 0.001f)
@@ -129,10 +130,11 @@ public class EnemyAIManager : EntityBase
     public bool CanSeePlayer()
     {
         if (isDownFunc != null && isDownFunc()) return false;
-        if (playerTransform == null) return false;
+        if (playerManager.gameObject.transform == null) return false;
+        if (playerManager.IsHidden) return false;
 
         Vector3 origin = transform.position + Vector3.up * eyeHeight;
-        Vector3 target = playerTransform.position + Vector3.up * playerAimHeight;
+        Vector3 target = playerManager.gameObject.transform.position + Vector3.up * playerAimHeight;
         Vector3 direction = (target - origin).normalized;
 
         float angle = Vector3.Angle(transform.forward, direction);
@@ -143,7 +145,7 @@ public class EnemyAIManager : EntityBase
             if (Physics.Raycast(origin, direction, out RaycastHit hit, sightRange))
             {
                 // Rayが最初に当たったオブジェクトがプレイヤーなら視認成功
-                if (hit.transform == playerTransform || hit.transform.root == playerTransform)
+                if (hit.transform == playerManager.gameObject.transform || hit.transform.root == playerManager.gameObject.transform)
                 {
                     return true;
                 }
@@ -154,9 +156,9 @@ public class EnemyAIManager : EntityBase
     }
 
 
-    public void SetPlayerTransform(Transform playerTransform)
+    public void SetPlayerManager(PlayerManager playerManager)
     {
-        this.playerTransform = playerTransform;
+        this.playerManager = playerManager;
     }
 
     public void SetEnemyAnimator(Animator animator)

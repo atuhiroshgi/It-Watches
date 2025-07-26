@@ -9,26 +9,32 @@ public class DefaultSkill : SkillBase
     private readonly float duration;
     private readonly float targetIntensity;
     private readonly float originalIntensity = 0f;
-    private readonly int skillAmount = 1;
 
     private CancellationTokenSource cts;
-    private bool isRunning = false;
 
-    public DefaultSkill(Light directionalLight, float duration = 5f, float targetIntensity = 2f)
+    public DefaultSkill(int skillCost, Light directionalLight, float duration = 5f, float targetIntensity = 2f)
     {
+        this.skillCost = skillCost;
         this.directionalLight = directionalLight;
         this.duration = duration;
         this.targetIntensity = targetIntensity;
     }
 
-    public override int Activate()
+    public override int GetSkillCost()
     {
-        if (isRunning) return 0;
+        return base.GetSkillCost();
+    }
 
+    public override bool CanActivate()
+    {
+        return base.CanActivate();
+    }
+
+    public override void Activate()
+    {
         cts?.Cancel(); // ëΩèdî≠ìÆëŒçÙ
         cts = new CancellationTokenSource();
         LightUpAsync(cts.Token).Forget();
-        return skillAmount;
     }
 
     private async UniTaskVoid LightUpAsync(CancellationToken token)
