@@ -34075,7 +34075,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wallLayerMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 65
   col: {fileID: 1832715788}
   rayDistance: 0.6
   wallAngleThreshold: 60

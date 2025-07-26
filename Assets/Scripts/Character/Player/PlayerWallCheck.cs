@@ -30,41 +30,31 @@ public class PlayerWallCheck : EntityBase
         moveDirection.y = 0f;
         moveDirection.Normalize();
 
-        Vector3 right = Vector3.Cross(Vector3.up, moveDirection);
-        Vector3 center = transform.position + Vector3.up * rayHeight;
+        // Capsuleの上下端の位置
+        Vector3 point1 = transform.position + Vector3.up * (col.radius);
+        Vector3 point2 = transform.position + Vector3.up * (col.height - col.radius);
 
-        float halfW = width / 2f;
-        float halfD = depth / 2f;
-
-        Vector3[] rayOrigins = new Vector3[4]
+        // Capsuleのキャスト
+        if (Physics.CapsuleCast(point1, point2, col.radius * 0.95f, moveDirection, out RaycastHit hit, rayDistance, wallLayerMask))
         {
-            center + right * halfW + moveDirection * halfD, // 右前
-            center - right * halfW + moveDirection * halfD, // 左前
-            center + right * halfW - moveDirection * halfD, // 右後
-            center - right * halfW - moveDirection * halfD  // 左後
-        };
-
-        foreach (Vector3 origin in rayOrigins)
-        {
-            if (Physics.Raycast(origin, moveDirection, out RaycastHit hit, rayDistance, wallLayerMask))
+            float angle = Vector3.Angle(hit.normal, Vector3.up);
+            if (angle > wallAngleThreshold)
             {
-                float angle = Vector3.Angle(hit.normal, Vector3.up);
-                if (angle > wallAngleThreshold)
-                {
-                    Debug.DrawRay(origin, moveDirection * rayDistance, Color.red);
-                    return true;
-                }
-                else
-                {
-                    Debug.DrawRay(origin, moveDirection * rayDistance, Color.yellow);
-                }
+                Debug.DrawRay(transform.position + Vector3.up * 0.5f, moveDirection * rayDistance, Color.red);
+                return true;
             }
             else
             {
-                Debug.DrawRay(origin, moveDirection * rayDistance, Color.green);
+                Debug.DrawRay(transform.position + Vector3.up * 0.5f, moveDirection * rayDistance, Color.yellow);
             }
+        }
+        else
+        {
+            Debug.DrawRay(transform.position + Vector3.up * 0.5f, moveDirection * rayDistance, Color.green);
         }
 
         return false;
     }
+
+
 }
